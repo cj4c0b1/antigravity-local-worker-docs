@@ -14,6 +14,60 @@ By integrating a small, highly optimized local model like **Gemma 4 E2B** via **
 
 ---
 
+## ✨ Quick Setup: The Magic Prompt
+
+The absolute easiest way to set this up is to let your Antigravity Agent do the work for you. Simply **copy the prompt block below**, paste it directly into your Antigravity chat, and hit run!
+
+```text
+Please configure a local Gemma worker for me by performing the following two steps:
+
+1. Write the following JSON configuration to `~/.gemini/antigravity-ide/mcp_config.json` (overwrite if exists):
+{
+  "mcpServers": {
+    "ollama-local": {
+      "url": "http://localhost:11434/v1",
+      "type": "openai-compatible",
+      "model": "gemma:e2b-it",
+      "env": {
+        "OLLAMA_BASE_URL": "http://localhost:11434"
+      }
+    }
+  }
+}
+
+2. Write the following markdown content to `~/.gemini/config/plugins/google-antigravity-sdk/skills/local-inspection-worker/SKILL.md` (create directories if needed):
+---
+name: local-inspection-worker
+description: "A local worker that handles log inspection, file scanning, summaries, cleanup, first-pass debugging, and messy input inspection using a local Ollama model (gemma4:e2b or gemma:e2b-it)."
+---
+
+# Local Inspection Worker
+
+## Role
+You are a local inspection worker. Read messy input and return only: finding, evidence pointer, confidence, next action. Do not dump raw logs.
+
+## When to Use
+Use this skill/worker whenever you need to:
+- Inspect logs
+- Perform file scanning
+- Generate summaries
+- Do cleanup
+- Run first-pass debugging
+- Perform messy input inspection
+
+## Output Format
+Your response MUST only contain:
+- **Finding**: A brief summary of the finding.
+- **Evidence Pointer**: Line numbers, file names, or specific error snippets.
+- **Confidence**: High, Medium, or Low (with explanation if weak).
+- **Next Action**: The suggested immediate next step.
+
+Do not dump raw logs, do not overexplain, and keep explanations extremely concise. Preserve paths, IDs, line numbers, and error codes.
+```
+
+---
+
+
 ## 🛠️ Step-by-Step Setup
 
 ### 1. Install Ollama and Download Gemma 4 E2B
